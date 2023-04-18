@@ -6,10 +6,14 @@ const Constraint = Matter.Constraint;
 var engine, world, backgroundImg;
 var canvas, angle, tower, ground, cannon;
 var cannonBall;
+var boatimg
+var boats, cb
+  
 
 function preload() {
   backgroundImg = loadImage("./assets/background.gif");
   towerImage = loadImage("./assets/tower.png");
+  boatimg = loadImage ("boat.png")
 }
 
 function setup() {
@@ -25,8 +29,10 @@ function setup() {
   World.add(world, tower);
 
   cannon = new Cannon(180, 130, 130, 100, angle);
-  cannonBall = new CannonBall(cannon.x, cannon.y);
+ // cannonBall = new CannonBall(cannon.x, cannon.y);
   imageMode(CENTER);
+  boats = []
+  cb = []
 }
 
 function draw() {
@@ -39,11 +45,42 @@ function draw() {
   image(towerImage, tower.position.x, tower.position.y, 160, 310);
   //console.log (cannon.angle)
 
-  
-  cannonBall.display();
+  showboats ()
+  for (var i = 0 ; i < cb.length ; i ++) {
+    cb [i].display ()
+  }
+  //cannonBall.display();
 }
 function keyReleased () {
-  if (keyCode == DOWN_ARROW)
-  cannonBall.shoot ()
-}
+  if (keyCode == DOWN_ARROW) {
+    cb [cb.length - 1].shoot ()
+  }
+  //cannonBall.shoot ()
 
+}
+function keyPressed () {
+  if (keyCode == DOWN_ARROW) {
+    cannonBall = new CannonBall(cannon.x, cannon.y);
+    cb.push (cannonBall)
+  }
+}
+function showboats () {
+if (boats.length > 0) {
+if (boats [boats.length - 1] == undefined || boats [boats.length - 1].body.position.x < width - 200) {
+  var p = [-20, -40, -60, -80]
+  var bp = random (p)
+  var b = new Boat (width , height - 50, 150, 150, bp)
+  boats.push (b)
+}
+for (var i = 0 ; i < boats.length ; i ++) {
+  if (boats [i]) {
+    Matter.Body.setVelocity (boats [i].body, {x : -2, y : 0})
+  }
+  boats [i].display ()
+}
+}
+else {
+  var b = new Boat (width , height - 50, 150, 150, -50)
+  boats.push (b)
+}
+}
