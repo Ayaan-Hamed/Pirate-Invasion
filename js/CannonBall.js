@@ -7,13 +7,22 @@ class CannonBall {
     this.body = Bodies.circle(x, y, this.r, options);
     this.image = loadImage("./assets/cannonball.png");
     World.add(world, this.body);
+    this.path = []
   }
 
 
   display() 
   {
     var pos = this.body.position;
+    push ()
     image(this.image, pos.x, pos.y, this.r, this.r);
+    pop ()
+    if (this.body.velocity.x > 0 && this.body.position.x > 240) {
+      this.path.push ([this.body.position.x, this.body.position.y])
+    }
+    for (var i = 0 ; i < this.path.length ; i ++) {
+      image(this.image, this.path [i] [0], this.path [i] [1], 5, 5); 
+    }
   }
   shoot () {
 var a = cannon.angle - 30
